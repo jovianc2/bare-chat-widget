@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2487.3">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">// script.js</p>
+<p class="p2"><br></p>
+<p class="p1">// Listen for send button click and 'Enter' key</p>
+<p class="p1">document.getElementById('sendButton').addEventListener('click', sendMessage);</p>
+<p class="p1">document.getElementById('userInput').addEventListener('keypress', function(e) {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (e.key === 'Enter') {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>sendMessage();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1">});</p>
+<p class="p2"><br></p>
+<p class="p1">// Append messages to chat display</p>
+<p class="p1">function appendMessage(message, sender) {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const messageDiv = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>messageDiv.innerText = message;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const chatMessages = document.getElementById('chatMessages');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>chatMessages.appendChild(messageDiv);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>chatMessages.scrollTop = chatMessages.scrollHeight;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">// Function to send message and fetch bot response</p>
+<p class="p1">function sendMessage() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const inputField = document.getElementById('userInput');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const userMessage = inputField.value.trim();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!userMessage) return;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>appendMessage(userMessage, 'user');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>inputField.value = '';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Replace '/chat' with your backend endpoint URL if needed</p>
+<p class="p1"><span class="Apple-converted-space">  </span>fetch('/chat', {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>method: 'POST',</p>
+<p class="p1"><span class="Apple-converted-space">    </span>headers: { 'Content-Type': 'application/json' },</p>
+<p class="p1"><span class="Apple-converted-space">    </span>body: JSON.stringify({ message: userMessage })</p>
+<p class="p1"><span class="Apple-converted-space">  </span>})</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.then(response =&gt; response.json())</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.then(data =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// data.response should contain the ChatGPT response</p>
+<p class="p1"><span class="Apple-converted-space">      </span>appendMessage(data.response, 'bot');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>})</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.catch(error =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>console.error('Error:', error);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>appendMessage("Oops, something went wrong. Please try again later.", 'bot');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1">}</p>
+</body>
+</html>
